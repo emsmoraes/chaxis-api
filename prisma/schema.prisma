@@ -7,3 +7,80 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model User {
+    id        String   @id @default(uuid())
+    role      UserRole @default(USER)
+    name      String
+    phone     String   @unique
+    email     String   @unique
+    password  String?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("users")
+}
+
+model Dealership {
+    id          String   @id @default(uuid())
+    name        String
+    description String?
+    stores      Store[]
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
+
+    @@map("dealerships")
+}
+
+model Store {
+    id           String     @id @default(uuid())
+    name         String
+    description  String?
+    address      String
+    city         String
+    state        String
+    postalCode   String
+    country      String
+    dealershipId String     @map("dealership_id")
+    dealership   Dealership @relation(fields: [dealershipId], references: [id])
+    Vehicle      Vehicle[]
+    createdAt    DateTime   @default(now()) @map("created_at")
+    updatedAt    DateTime   @updatedAt @map("updated_at")
+
+    @@index([dealershipId])
+    @@map("stores")
+}
+
+model Vehicle {
+    id              String      @id @default(uuid())
+    type            VehicleType
+    make            String
+    model           String
+    version         String
+    year            String
+    mileage         Int
+    transmission    String
+    bodyType        String
+    fuelType        String
+    licensePlateEnd String      @map("license_plate_end")
+    color           String
+    price           Decimal     @db.Decimal(10, 2)
+    acceptsTrade    Boolean     @map("accepts_trade")
+    features        String[]
+    storeId         String
+    store           Store       @relation(fields: [storeId], references: [id])
+    createdAt       DateTime    @default(now()) @map("created_at")
+    updatedAt       DateTime    @updatedAt @map("updated_at")
+
+    @@index([storeId])
+    @@map("vehicles")
+}
+
+enum UserRole {
+    ADMIN
+    USER
+}
+
+enum VehicleType {
+    CAR
+    MOTORCYCLE
+}
