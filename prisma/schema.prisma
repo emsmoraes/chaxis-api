@@ -53,8 +53,8 @@ model Store {
 model Vehicle {
     id              String      @id @default(uuid())
     type            VehicleType
-    make            String
     model           String
+    code            String      @unique
     version         String
     year            String
     mileage         Int
@@ -66,13 +66,25 @@ model Vehicle {
     price           Decimal     @db.Decimal(10, 2)
     acceptsTrade    Boolean     @map("accepts_trade")
     features        String[]
+    makeId          String
     storeId         String
     store           Store       @relation(fields: [storeId], references: [id])
+    make            Brand       @relation(fields: [makeId], references: [id])
     createdAt       DateTime    @default(now()) @map("created_at")
     updatedAt       DateTime    @updatedAt @map("updated_at")
 
     @@index([storeId])
     @@map("vehicles")
+}
+
+model Brand {
+    id      String    @id @default(uuid())
+    name    String    @unique
+    code    String    @unique
+    alias   String    @unique
+    Vehicle Vehicle[]
+
+    @@map("brands")
 }
 
 enum UserRole {
