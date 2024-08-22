@@ -80,7 +80,7 @@ model Vehicle {
 model Brand {
     id      String    @id @default(uuid())
     name    String    @unique
-    code    String    @unique
+    code    String?   @unique
     alias   String    @unique
     Vehicle Vehicle[]
 
