@@ -3,6 +3,8 @@ import { ConfigModule as ConfigModuleNest } from "@nestjs/config"
 
 import { envSchema } from './env/env';
 import { EnvModule } from './env/env.module';
+import { DealershipModule } from './dealership/dealership.module';
+import { PrismaModule } from './shared/database/prisma.module';
 
 @Module({
     imports: [
@@ -11,6 +13,8 @@ import { EnvModule } from './env/env.module';
             isGlobal: true,
         }),
         EnvModule,
+        DealershipModule,
+        PrismaModule,
     ],
     controllers: [],
     providers: [],
