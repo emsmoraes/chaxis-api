@@ -1,6 +1,5 @@
-import { IsString, IsOptional, IsUUID, IsInt, IsEnum, IsArray, IsBoolean, IsDecimal, IsDateString } from "class-validator";
+import { IsString, IsOptional, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { vehicleType } from "src/shared/enum/vehicle-type";
 
 export class UpdateVehicleDto {
     @ApiProperty({ example: "Best Car Model", required: false })
@@ -8,10 +7,10 @@ export class UpdateVehicleDto {
     @IsOptional()
     model?: string;
 
-    @ApiProperty({ example: vehicleType.CAR, required: false })
-    @IsEnum(vehicleType)
+    @ApiProperty({ example: "vehicleType-uuid", required: false })
+    @IsUUID()
     @IsOptional()
-    type?: vehicleType;
+    vehicleTypeId?: string;
 
     @ApiProperty({ example: "ABC123", required: false })
     @IsString()
@@ -38,10 +37,10 @@ export class UpdateVehicleDto {
     @IsOptional()
     transmission?: string;
 
-    @ApiProperty({ example: "Sedan", required: false })
-    @IsString()
+    @ApiProperty({ example: "bodyType-uuid", required: false })
+    @IsUUID()
     @IsOptional()
-    bodyType?: string;
+    bodyTypeId?: string;
 
     @ApiProperty({ example: "Petrol", required: false })
     @IsString()
@@ -74,8 +73,13 @@ export class UpdateVehicleDto {
     @IsOptional()
     features?: string[];
 
+    @ApiProperty({ example: "store-uuid", required: false })
+    @IsUUID()
+    @IsOptional()
+    storeId?: string;
+
     @ApiProperty({ example: "brand-uuid", required: false })
-    @IsString()
+    @IsUUID()
     @IsOptional()
     makeId?: string;
 }

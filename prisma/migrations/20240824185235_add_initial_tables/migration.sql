@@ -1,14 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
-CREATE TYPE "VehicleType" AS ENUM ('CAR', 'MOTORCYCLE');
-
--- DropTable
-DROP TABLE "User";
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -55,13 +46,14 @@ CREATE TABLE "stores" (
 -- CreateTable
 CREATE TABLE "vehicles" (
     "id" TEXT NOT NULL,
-    "type" "VehicleType" NOT NULL,
+    "typeId" TEXT NOT NULL,
     "model" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
     "version" TEXT NOT NULL,
     "year" TEXT NOT NULL,
     "mileage" INTEGER NOT NULL,
     "transmission" TEXT NOT NULL,
-    "bodyType" TEXT NOT NULL,
+    "bodyTypeId" TEXT NOT NULL,
     "fuelType" TEXT NOT NULL,
     "license_plate_end" TEXT NOT NULL,
     "color" TEXT NOT NULL,
@@ -80,10 +72,26 @@ CREATE TABLE "vehicles" (
 CREATE TABLE "brands" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "code" TEXT NOT NULL,
+    "code" TEXT,
     "alias" TEXT NOT NULL,
 
     CONSTRAINT "brands_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BodyType" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "BodyType_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "VehicleType" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "VehicleType_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -107,6 +115,12 @@ CREATE UNIQUE INDEX "brands_code_key" ON "brands"("code");
 -- CreateIndex
 CREATE UNIQUE INDEX "brands_alias_key" ON "brands"("alias");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "BodyType_name_key" ON "BodyType"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "VehicleType_name_key" ON "VehicleType"("name");
+
 -- AddForeignKey
 ALTER TABLE "stores" ADD CONSTRAINT "stores_dealership_id_fkey" FOREIGN KEY ("dealership_id") REFERENCES "dealerships"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -115,3 +129,9 @@ ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_storeId_fkey" FOREIGN KEY ("stor
 
 -- AddForeignKey
 ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_makeId_fkey" FOREIGN KEY ("makeId") REFERENCES "brands"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_bodyTypeId_fkey" FOREIGN KEY ("bodyTypeId") REFERENCES "BodyType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "VehicleType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

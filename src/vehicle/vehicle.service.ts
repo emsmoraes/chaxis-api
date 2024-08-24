@@ -21,23 +21,32 @@ export class VehicleService {
             throw new NotFoundException("Marca não encontrada");
         }
 
+        const vehicleType = await this.prisma.vehicleType.findUnique({ where: { id: data.vehicleTypeId } });
+        if (!vehicleType) {
+            throw new NotFoundException("Tipo de veículo não encontrado");
+        }
+
+        const bodyType = await this.prisma.bodyType.findUnique({ where: { id: data.bodyTypeId } });
+        if (!bodyType) {
+            throw new NotFoundException("Tipo de carroceria não encontrado");
+        }
+
         try {
             const createVehicleDto = new CreateVehicleDto();
             Object.assign(createVehicleDto, data);
-
             await validateOrReject(createVehicleDto);
 
             const price = parseFloat(createVehicleDto.price);
 
             const vehicleData: Prisma.VehicleCreateInput = {
                 model: createVehicleDto.model,
-                type: createVehicleDto.type,
+                vehicleType: { connect: { id: createVehicleDto.vehicleTypeId } }, // ajustado
                 code: createVehicleDto.code,
                 version: createVehicleDto.version,
                 year: createVehicleDto.year,
                 mileage: createVehicleDto.mileage,
                 transmission: createVehicleDto.transmission,
-                bodyType: createVehicleDto.bodyType,
+                bodyType: { connect: { id: createVehicleDto.bodyTypeId } },
                 fuelType: createVehicleDto.fuelType,
                 licensePlateEnd: createVehicleDto.licensePlateEnd,
                 color: createVehicleDto.color,
@@ -108,22 +117,44 @@ export class VehicleService {
                 }
             }
 
+            if (data.vehicleTypeId) {
+                const vehicleType = await this.prisma.vehicleType.findUnique({ where: { id: data.vehicleTypeId } });
+                if (!vehicleType) {
+                    throw new NotFoundException('Tipo de veículo não encontrado');
+                }
+            }
+
+            if (data.bodyTypeId) {
+                const bodyType = await this.prisma.bodyType.findUnique({ where: { id: data.bodyTypeId } });
+                if (!bodyType) {
+                    throw new NotFoundException('Tipo de carroceria não encontrado');
+                }
+            }
+
+            if (data.storeId) {
+                const store = await this.prisma.store.findUnique({ where: { id: data.storeId } });
+                if (!store) {
+                    throw new NotFoundException('Loja não encontrada');
+                }
+            }
+
             const updatedData: Prisma.VehicleUpdateInput = {
                 model: data.model,
-                type: data.type,
+                vehicleType: data.vehicleTypeId ? { connect: { id: data.vehicleTypeId } } : undefined,
                 code: data.code,
                 version: data.version,
                 year: data.year,
                 mileage: data.mileage,
                 transmission: data.transmission,
-                bodyType: data.bodyType,
+                bodyType: data.bodyTypeId ? { connect: { id: data.bodyTypeId } } : undefined,
                 fuelType: data.fuelType,
                 licensePlateEnd: data.licensePlateEnd,
                 color: data.color,
                 price: data.price ? parseFloat(data.price) : undefined,
                 acceptsTrade: data.acceptsTrade,
                 features: data.features,
-                ...(data.makeId ? { make: { connect: { id: data.makeId } } } : {}),
+                store: data.storeId ? { connect: { id: data.storeId } } : undefined,
+                make: data.makeId ? { connect: { id: data.makeId } } : undefined,
             };
 
             return await this.prisma.vehicle.update({
@@ -132,7 +163,6 @@ export class VehicleService {
             });
 
         } catch (e) {
-            console.log(e)
             if (e instanceof Array && e[0] instanceof ValidationError) {
                 const errorMessages = e.map(error =>
                     Object.values(error.constraints || {}).join(", ")

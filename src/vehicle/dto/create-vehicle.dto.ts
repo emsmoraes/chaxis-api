@@ -1,15 +1,14 @@
-import { IsString, IsUUID, IsInt, IsEnum, IsArray, IsBoolean, IsDecimal, IsDateString } from "class-validator";
+import { IsString, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { vehicleType } from "src/shared/enum/vehicle-type";
 
 export class CreateVehicleDto {
     @ApiProperty({ example: "Best Car Model" })
     @IsString()
     model: string;
 
-    @ApiProperty({ example: vehicleType.CAR })
-    @IsEnum(vehicleType)
-    type: vehicleType = vehicleType.CAR;
+    @ApiProperty({ example: "vehicleType-uuid" })
+    @IsUUID()
+    vehicleTypeId: string;
 
     @ApiProperty({ example: "ABC123" })
     @IsString()
@@ -31,9 +30,9 @@ export class CreateVehicleDto {
     @IsString()
     transmission: string;
 
-    @ApiProperty({ example: "Sedan" })
-    @IsString()
-    bodyType: string;
+    @ApiProperty({ example: "bodyType-uuid" })
+    @IsUUID()
+    bodyTypeId: string;
 
     @ApiProperty({ example: "Petrol" })
     @IsString()
@@ -65,6 +64,6 @@ export class CreateVehicleDto {
     storeId: string;
 
     @ApiProperty({ example: "brand-uuid" })
-    @IsString()
+    @IsUUID()
     makeId: string;
 }

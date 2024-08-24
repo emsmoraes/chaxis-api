@@ -52,24 +52,26 @@ model Store {
 
 model Vehicle {
     id              String      @id @default(uuid())
-    type            VehicleType
     model           String
     code            String
     version         String
     year            String
     mileage         Int
     transmission    String
-    bodyType        String
     fuelType        String
     licensePlateEnd String      @map("license_plate_end")
     color           String
     price           Decimal     @db.Decimal(10, 2)
     acceptsTrade    Boolean     @map("accepts_trade")
     features        String[]
+    typeId          String
+    bodyTypeId      String
     makeId          String
     storeId         String
     store           Store       @relation(fields: [storeId], references: [id])
     make            Brand       @relation(fields: [makeId], references: [id])
+    bodyType        BodyType    @relation(fields: [bodyTypeId], references: [id])
+    vehicleType     VehicleType @relation(fields: [typeId], references: [id])
     createdAt       DateTime    @default(now()) @map("created_at")
     updatedAt       DateTime    @updatedAt @map("updated_at")
 
@@ -87,12 +89,21 @@ model Brand {
     @@map("brands")
 }
 
+model BodyType {
+    id       String    @id @default(uuid())
+    name     String    @unique
+    alias    String    @unique
+    vehicles Vehicle[]
+}
+
+model VehicleType {
+    id       String    @id @default(uuid())
+    name     String    @unique
+    alias    String    @unique
+    vehicles Vehicle[]
+}
+
 enum UserRole {
     ADMIN
     USER
-}
-
-enum VehicleType {
-    CAR
-    MOTORCYCLE
 }

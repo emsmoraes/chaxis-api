@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Brands } from '../src/shared/utils/brands';
+import { BodyTypes } from '../src/shared/utils/body-types';
+import { VehicleTypes } from '../src/shared/utils/vehicle-types';
 
 const prisma = new PrismaClient();
 
@@ -12,6 +14,28 @@ async function main() {
                 name: brand.nome,
                 code: brand.codigo,
                 alias: brand.nome.toLowerCase().replace(/\s+/g, '_')
+            },
+        });
+    }
+
+    for (const bodyType of BodyTypes) {
+        await prisma.bodyType.upsert({
+            where: { name: bodyType.name },
+            update: {},
+            create: {
+                name: bodyType.name,
+                alias: bodyType.name.toLowerCase().replace(/\s+/g, '_')
+            },
+        });
+    }
+
+    for (const vehicleType of VehicleTypes) {
+        await prisma.vehicleType.upsert({
+            where: { name: vehicleType.name },
+            update: {},
+            create: {
+                name: vehicleType.name,
+                alias: vehicleType.name.toLowerCase().replace(/\s+/g, '_')
             },
         });
     }
