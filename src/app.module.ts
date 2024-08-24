@@ -5,6 +5,7 @@ import { envSchema } from './env/env';
 import { EnvModule } from './env/env.module';
 import { DealershipModule } from './dealership/dealership.module';
 import { PrismaModule } from './shared/database/prisma.module';
+import { StoreModule } from './store/store.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { PrismaModule } from './shared/database/prisma.module';
         }),
         EnvModule,
         DealershipModule,
+        StoreModule,
         PrismaModule,
     ],
     controllers: [],
