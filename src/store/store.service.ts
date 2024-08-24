@@ -80,6 +80,10 @@ export class StoreService {
                 throw new NotFoundException("Loja não encontrada");
             }
 
+            const updateStoreDto = new UpdateStoreDto();
+            Object.assign(updateStoreDto, data);
+            await validateOrReject(updateStoreDto);
+
             const updatedStore = await this.prisma.store.update({
                 where: { id },
                 data: {
@@ -95,9 +99,20 @@ export class StoreService {
 
             return updatedStore;
         } catch (e) {
+            if (e instanceof Array && e[0] instanceof ValidationError) {
+                const errorMessages = e.map(error =>
+                    Object.values(error.constraints || {}).join(", ")
+                );
+                throw new BadRequestException({
+                    message: errorMessages,
+                    errors: e
+                });
+            }
+
             if (e instanceof Prisma.PrismaClientKnownRequestError) {
                 throw new BadRequestException("Erro ao atualizar a loja");
             }
+
             throw e;
         }
     }

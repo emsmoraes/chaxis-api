@@ -54,7 +54,7 @@ model Vehicle {
     id              String      @id @default(uuid())
     type            VehicleType
     model           String
-    code            String      @unique
+    code            String
     version         String
     year            String
     mileage         Int

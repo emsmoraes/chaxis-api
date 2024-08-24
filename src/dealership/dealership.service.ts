@@ -61,7 +61,7 @@ export class DealershipService {
 
             await validateOrReject(updateDealershipDto);
 
-            return await this.prisma.dealership.update({ where: { id }, data: updateDealershipDto as Prisma.DealershipCreateInput });
+            return await this.prisma.dealership.update({ where: { id }, data: updateDealershipDto as Prisma.DealershipUpdateInput });
         } catch (e) {
             if (e instanceof Array && e[0] instanceof ValidationError) {
                 const errorMessages = e.map(error =>
@@ -83,11 +83,21 @@ export class DealershipService {
     }
 
     async remove(id: string) {
-        const dealership = await this.prisma.dealership.findUnique({ where: { id } });
-        if (!dealership) {
-            throw new NotFoundException("Concessionária não encontrada");
-        }
+        try {
+            const existingVehicle = await this.prisma.vehicle.findUnique({ where: { id } });
+            if (!existingVehicle) {
+                throw new NotFoundException("Veículo não encontrado");
+            }
 
-        await this.prisma.dealership.delete({ where: { id } });
+            await this.prisma.vehicle.delete({ where: { id } });
+
+            return { message: `Veículo removido com sucesso` };
+        } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                throw new BadRequestException("Erro ao remover o veículo");
+            }
+
+            throw e;
+        }
     }
 }
