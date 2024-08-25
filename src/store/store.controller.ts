@@ -83,7 +83,7 @@ export class StoreController {
                 this.prisma.store.update({
                     where: { id },
                     data: {
-                        File: {
+                        file: {
                             connect: { id: photoRecord.id }
                         }
                     }
@@ -122,7 +122,7 @@ export class StoreController {
                 this.prisma.store.update({
                     where: { id },
                     data: {
-                        File: {
+                        file: {
                             connect: { id: bannerRecord.id }
                         }
                     }

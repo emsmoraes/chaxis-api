@@ -83,7 +83,7 @@ export class DealershipController {
             await this.prisma.dealership.update({
                 where: { id },
                 data: {
-                    File: {
+                    file: {
                         connect: { id: fileRecord.id }
                     }
                 }

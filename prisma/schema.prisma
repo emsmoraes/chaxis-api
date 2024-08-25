@@ -27,7 +27,7 @@ model Dealership {
     stores      Store[]
     createdAt   DateTime @default(now()) @map("created_at")
     updatedAt   DateTime @updatedAt @map("updated_at")
-    File        File[]
+    file        File[]
 
     @@map("dealerships")
 }
@@ -46,7 +46,7 @@ model Store {
     Vehicle      Vehicle[]
     createdAt    DateTime   @default(now()) @map("created_at")
     updatedAt    DateTime   @updatedAt @map("updated_at")
-    File         File[]
+    file         File[]
 
     @@index([dealershipId])
     @@map("stores")
