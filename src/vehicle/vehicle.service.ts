@@ -37,21 +37,25 @@ export class VehicleService {
             await validateOrReject(createVehicleDto);
 
             const price = parseFloat(createVehicleDto.price);
+            const mileage = Number(createVehicleDto.mileage);
+            const acceptsTrade = JSON.parse(createVehicleDto.acceptsTrade)
+
+            console.log(price)
 
             const vehicleData: Prisma.VehicleCreateInput = {
                 model: createVehicleDto.model,
-                vehicleType: { connect: { id: createVehicleDto.vehicleTypeId } }, // ajustado
+                vehicleType: { connect: { id: createVehicleDto.vehicleTypeId } },
                 code: createVehicleDto.code,
                 version: createVehicleDto.version,
                 year: createVehicleDto.year,
-                mileage: createVehicleDto.mileage,
+                mileage: mileage,
                 transmission: createVehicleDto.transmission,
                 bodyType: { connect: { id: createVehicleDto.bodyTypeId } },
                 fuelType: createVehicleDto.fuelType,
                 licensePlateEnd: createVehicleDto.licensePlateEnd,
                 color: createVehicleDto.color,
                 price: price,
-                acceptsTrade: createVehicleDto.acceptsTrade,
+                acceptsTrade: acceptsTrade,
                 features: createVehicleDto.features,
                 store: { connect: { id: createVehicleDto.storeId } },
                 make: { connect: { id: createVehicleDto.makeId } },
@@ -88,7 +92,7 @@ export class VehicleService {
     }
 
     async findOne(id: string) {
-        const vehicle = await this.prisma.vehicle.findFirst({ where: { id } })
+        const vehicle = await this.prisma.vehicle.findFirst({ where: { id }, include: { VehicleImage: true } })
         if (!vehicle) {
             throw new NotFoundException("Veículo não encontrado")
         }

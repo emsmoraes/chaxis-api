@@ -23,8 +23,8 @@ export class CreateVehicleDto {
     year: string;
 
     @ApiProperty({ example: 15000 })
-    @IsInt()
-    mileage: number;
+    @IsString()
+    mileage: string;
 
     @ApiProperty({ example: "Automatic" })
     @IsString()
@@ -51,8 +51,8 @@ export class CreateVehicleDto {
     price: string;
 
     @ApiProperty({ example: true })
-    @IsBoolean()
-    acceptsTrade: boolean;
+    @IsString()
+    acceptsTrade: string;
 
     @ApiProperty({ example: ["Sunroof", "Leather Seats"] })
     @IsArray()

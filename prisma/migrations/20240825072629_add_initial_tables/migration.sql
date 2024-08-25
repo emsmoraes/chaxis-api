@@ -96,6 +96,19 @@ CREATE TABLE "File" (
 );
 
 -- CreateTable
+CREATE TABLE "vehicle_images" (
+    "id" TEXT NOT NULL,
+    "extension" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "vehicleId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "position" INTEGER NOT NULL,
+
+    CONSTRAINT "vehicle_images_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "BodyType" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -135,6 +148,9 @@ CREATE UNIQUE INDEX "brands_code_key" ON "brands"("code");
 CREATE UNIQUE INDEX "brands_alias_key" ON "brands"("alias");
 
 -- CreateIndex
+CREATE INDEX "vehicle_images_vehicleId_position_idx" ON "vehicle_images"("vehicleId", "position");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "BodyType_name_key" ON "BodyType"("name");
 
 -- CreateIndex
@@ -166,3 +182,6 @@ ALTER TABLE "File" ADD CONSTRAINT "File_dealershipId_fkey" FOREIGN KEY ("dealers
 
 -- AddForeignKey
 ALTER TABLE "File" ADD CONSTRAINT "File_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vehicle_images" ADD CONSTRAINT "vehicle_images_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "vehicles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

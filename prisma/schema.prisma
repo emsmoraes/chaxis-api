@@ -53,7 +53,7 @@ model Store {
 }
 
 model Vehicle {
-    id              String      @id @default(uuid())
+    id              String         @id @default(uuid())
     model           String
     code            String
     version         String
@@ -61,21 +61,22 @@ model Vehicle {
     mileage         Int
     transmission    String
     fuelType        String
-    licensePlateEnd String      @map("license_plate_end")
+    licensePlateEnd String         @map("license_plate_end")
     color           String
-    price           Decimal     @db.Decimal(10, 2)
-    acceptsTrade    Boolean     @map("accepts_trade")
+    price           Decimal        @db.Decimal(10, 2)
+    acceptsTrade    Boolean        @map("accepts_trade")
     features        String[]
     typeId          String
     bodyTypeId      String
     makeId          String
     storeId         String
-    store           Store       @relation(fields: [storeId], references: [id])
-    make            Brand       @relation(fields: [makeId], references: [id])
-    bodyType        BodyType    @relation(fields: [bodyTypeId], references: [id])
-    vehicleType     VehicleType @relation(fields: [typeId], references: [id])
-    createdAt       DateTime    @default(now()) @map("created_at")
-    updatedAt       DateTime    @updatedAt @map("updated_at")
+    VehicleImage    VehicleImage[] 
+    store           Store          @relation(fields: [storeId], references: [id])
+    make            Brand          @relation(fields: [makeId], references: [id])
+    bodyType        BodyType       @relation(fields: [bodyTypeId], references: [id])
+    vehicleType     VehicleType    @relation(fields: [typeId], references: [id])
+    createdAt       DateTime       @default(now()) @map("created_at")
+    updatedAt       DateTime       @updatedAt @map("updated_at")
 
     @@index([storeId])
     @@map("vehicles")
@@ -102,6 +103,20 @@ model File {
     store        Store?      @relation(fields: [storeId], references: [id])
     createdAt    DateTime    @default(now())
     updatedAt    DateTime    @updatedAt
+}
+
+model VehicleImage {
+    id        String   @id @default(uuid())
+    extension String
+    url       String
+    vehicleId String
+    vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    position  Int
+
+    @@index([vehicleId, position])
+    @@map("vehicle_images")
 }
 
 model BodyType {
