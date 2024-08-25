@@ -65,7 +65,7 @@ export class StoreService {
         const store = await this.prisma.store.findUnique({
             where: { id },
             include: {
-                File: true
+                file: true
             }
         });
 
@@ -99,7 +99,7 @@ export class StoreService {
                     country: data.country,
                 },
                 include: {
-                    File: true
+                    file: true
                 }
             });
 
