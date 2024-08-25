@@ -7,12 +7,12 @@ import { UpdateDealershipDto } from './dto/update-dealership.dto';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 import { AwsService } from 'src/aws/aws.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { v4 as uuidv4 } from 'uuid';
 
 @ApiTags('Dealership')
 @Controller('dealerships')
 export class DealershipController {
-    constructor(private readonly dealershipService: DealershipService,
+    constructor(
+        private readonly dealershipService: DealershipService,
         private readonly awsService: AwsService,
         private readonly prisma: PrismaService) { }
 
@@ -50,18 +50,18 @@ export class DealershipController {
     ) {
         const updatedDealership = await this.dealershipService.update(id, updateDealershipDto);
 
-        const existingFile = await this.prisma.file.findFirst({
-            where: { dealershipId: id, fileType: 'DEALERSHIP_PHOTO' }
-        });
-
-        if (existingFile) {
-            const folder = 'DEALERSHIP_PHOTOS';
-            await this.awsService.delete(existingFile.id, folder);
-
-            await this.prisma.file.delete({ where: { id: existingFile.id } });
-        }
-
         if (file) {
+            const existingFile = await this.prisma.file.findFirst({
+                where: { dealershipId: id, fileType: 'DEALERSHIP_PHOTO' }
+            });
+
+            if (existingFile) {
+                const folder = 'DEALERSHIP_PHOTOS';
+                await this.awsService.delete(`${existingFile.id}.${existingFile.extension}`, folder);
+
+                await this.prisma.file.delete({ where: { id: existingFile.id } });
+            }
+
             const fileRecord = await this.prisma.file.create({
                 data: {
                     fileType: 'DEALERSHIP_PHOTO',
@@ -69,12 +69,15 @@ export class DealershipController {
                 }
             });
 
+            const fileExtension = file.originalname.split('.').pop();
+            const fileName = `${fileRecord.id}.${fileExtension}`;
+
             const folder = 'DEALERSHIP_PHOTOS';
-            const photoUrl = await this.awsService.post(fileRecord.id, file.buffer, folder);
+            const photoUrl = await this.awsService.post(fileName, file.buffer, folder,);
 
             await this.prisma.file.update({
                 where: { id: fileRecord.id },
-                data: { url: photoUrl }
+                data: { url: photoUrl, extension: fileExtension }
             });
 
             await this.prisma.dealership.update({

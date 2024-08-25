@@ -63,7 +63,10 @@ export class StoreService {
 
     async findOne(id: string) {
         const store = await this.prisma.store.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                File: true
+            }
         });
 
         if (!store) {
@@ -95,6 +98,9 @@ export class StoreService {
                     postalCode: data.postalCode,
                     country: data.country,
                 },
+                include: {
+                    File: true
+                }
             });
 
             return updatedStore;

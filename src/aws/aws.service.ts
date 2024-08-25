@@ -17,6 +17,7 @@ export class AwsService {
                 Body: file
             })
         )
+
         return `https://chaxiss.s3.sa-east-1.amazonaws.com/${Key}`;
     }
 

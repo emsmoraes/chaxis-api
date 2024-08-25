@@ -84,7 +84,8 @@ CREATE TABLE "brands" (
 -- CreateTable
 CREATE TABLE "File" (
     "id" TEXT NOT NULL,
-    "url" TEXT NOT NULL,
+    "extension" TEXT,
+    "url" TEXT,
     "fileType" "FileType" NOT NULL,
     "dealershipId" TEXT,
     "storeId" TEXT,

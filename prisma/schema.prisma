@@ -93,6 +93,7 @@ model Brand {
 
 model File {
     id           String      @id @default(uuid())
+    extension    String?
     url          String?
     fileType     FileType
     dealershipId String?
