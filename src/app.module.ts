@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule as ConfigModuleNest } from "@nestjs/config"
+import { ConfigModule, ConfigModule as ConfigModuleNest } from "@nestjs/config"
 
 import { envSchema } from './env/env';
 import { EnvModule } from './env/env.module';
@@ -7,6 +7,7 @@ import { DealershipModule } from './dealership/dealership.module';
 import { PrismaModule } from './shared/database/prisma.module';
 import { StoreModule } from './store/store.module';
 import { VehicleModule } from './vehicle/vehicle.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
     imports: [
@@ -19,6 +20,8 @@ import { VehicleModule } from './vehicle/vehicle.module';
         StoreModule,
         PrismaModule,
         VehicleModule,
+        AwsModule,
+        ConfigModule.forRoot({ isGlobal: true })
     ],
     controllers: [],
     providers: [],

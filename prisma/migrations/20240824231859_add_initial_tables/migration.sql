@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
+-- CreateEnum
+CREATE TYPE "FileType" AS ENUM ('DEALERSHIP_PHOTO', 'STORE_PHOTO', 'STORE_BANNER');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -46,20 +49,20 @@ CREATE TABLE "stores" (
 -- CreateTable
 CREATE TABLE "vehicles" (
     "id" TEXT NOT NULL,
-    "typeId" TEXT NOT NULL,
     "model" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "version" TEXT NOT NULL,
     "year" TEXT NOT NULL,
     "mileage" INTEGER NOT NULL,
     "transmission" TEXT NOT NULL,
-    "bodyTypeId" TEXT NOT NULL,
     "fuelType" TEXT NOT NULL,
     "license_plate_end" TEXT NOT NULL,
     "color" TEXT NOT NULL,
     "price" DECIMAL(10,2) NOT NULL,
     "accepts_trade" BOOLEAN NOT NULL,
     "features" TEXT[],
+    "typeId" TEXT NOT NULL,
+    "bodyTypeId" TEXT NOT NULL,
     "makeId" TEXT NOT NULL,
     "storeId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -79,9 +82,23 @@ CREATE TABLE "brands" (
 );
 
 -- CreateTable
+CREATE TABLE "File" (
+    "id" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "fileType" "FileType" NOT NULL,
+    "dealershipId" TEXT,
+    "storeId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "File_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "BodyType" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "alias" TEXT NOT NULL,
 
     CONSTRAINT "BodyType_pkey" PRIMARY KEY ("id")
 );
@@ -90,6 +107,7 @@ CREATE TABLE "BodyType" (
 CREATE TABLE "VehicleType" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "alias" TEXT NOT NULL,
 
     CONSTRAINT "VehicleType_pkey" PRIMARY KEY ("id")
 );
@@ -119,7 +137,13 @@ CREATE UNIQUE INDEX "brands_alias_key" ON "brands"("alias");
 CREATE UNIQUE INDEX "BodyType_name_key" ON "BodyType"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "BodyType_alias_key" ON "BodyType"("alias");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "VehicleType_name_key" ON "VehicleType"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "VehicleType_alias_key" ON "VehicleType"("alias");
 
 -- AddForeignKey
 ALTER TABLE "stores" ADD CONSTRAINT "stores_dealership_id_fkey" FOREIGN KEY ("dealership_id") REFERENCES "dealerships"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -135,3 +159,9 @@ ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_bodyTypeId_fkey" FOREIGN KEY ("b
 
 -- AddForeignKey
 ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "VehicleType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "File" ADD CONSTRAINT "File_dealershipId_fkey" FOREIGN KEY ("dealershipId") REFERENCES "dealerships"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "File" ADD CONSTRAINT "File_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE SET NULL ON UPDATE CASCADE;

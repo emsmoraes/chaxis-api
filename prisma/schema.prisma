@@ -27,6 +27,7 @@ model Dealership {
     stores      Store[]
     createdAt   DateTime @default(now()) @map("created_at")
     updatedAt   DateTime @updatedAt @map("updated_at")
+    File        File[]
 
     @@map("dealerships")
 }
@@ -45,6 +46,7 @@ model Store {
     Vehicle      Vehicle[]
     createdAt    DateTime   @default(now()) @map("created_at")
     updatedAt    DateTime   @updatedAt @map("updated_at")
+    File         File[]
 
     @@index([dealershipId])
     @@map("stores")
@@ -89,6 +91,18 @@ model Brand {
     @@map("brands")
 }
 
+model File {
+    id           String      @id @default(uuid())
+    url          String?
+    fileType     FileType
+    dealershipId String?
+    dealership   Dealership? @relation(fields: [dealershipId], references: [id])
+    storeId      String?
+    store        Store?      @relation(fields: [storeId], references: [id])
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @updatedAt
+}
+
 model BodyType {
     id       String    @id @default(uuid())
     name     String    @unique
@@ -106,4 +120,10 @@ model VehicleType {
 enum UserRole {
     ADMIN
     USER
+}
+
+enum FileType {
+    DEALERSHIP_PHOTO
+    STORE_PHOTO
+    STORE_BANNER
 }

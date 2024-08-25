@@ -42,7 +42,7 @@ export class DealershipService {
     }
 
     async findOne(id: string) {
-        const dealership = await this.prisma.dealership.findUnique({ where: { id }, include: { stores: true } })
+        const dealership = await this.prisma.dealership.findUnique({ where: { id }, include: { stores: true, File: true } })
         if (!dealership) {
             throw new NotFoundException("Concecionária não encontrada")
         }
