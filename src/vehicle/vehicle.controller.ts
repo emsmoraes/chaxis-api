@@ -64,14 +64,11 @@ export class VehicleController {
         @Body() updateVehicleDto: UpdateVehicleDto,
         @UploadedFiles() files: Express.Multer.File[]
     ) {
-
         const transformedDto = this.transformDto(updateVehicleDto);
 
         const updatedVehicle = await this.vehicleService.update(id, transformedDto);
 
-
         if (transformedDto.existingImages && Array.isArray(transformedDto.existingImages)) {
-            console.log(transformedDto)
             for (const image of transformedDto.existingImages) {
                 await this.prisma.vehicleImage.update({
                     where: { id: image.id },
@@ -83,7 +80,8 @@ export class VehicleController {
         if (files && files.length > 0) {
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                const position = updateVehicleDto.existingImages ? updateVehicleDto.existingImages.length + i : i;
+                const dtoPosition = transformedDto.newImages[i]?.position;
+                const position = dtoPosition !== undefined ? Number(dtoPosition) : (updateVehicleDto.existingImages ? updateVehicleDto.existingImages.length + i : i);
 
                 const fileExtension = file.originalname.split('.').pop();
                 const fileName = `${updatedVehicle.id}_${position}.${fileExtension}`;
