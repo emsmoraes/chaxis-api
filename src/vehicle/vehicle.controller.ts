@@ -58,12 +58,81 @@ export class VehicleController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
-        return this.vehicleService.update(id, updateVehicleDto);
+    @UseInterceptors(FilesInterceptor('newImages', 10))
+    async update(
+        @Param('id') id: string,
+        @Body() updateVehicleDto: UpdateVehicleDto,
+        @UploadedFiles() files: Express.Multer.File[]
+    ) {
+
+        const transformedDto = this.transformDto(updateVehicleDto);
+
+        const updatedVehicle = await this.vehicleService.update(id, transformedDto);
+
+
+        if (transformedDto.existingImages && Array.isArray(transformedDto.existingImages)) {
+            console.log(transformedDto)
+            for (const image of transformedDto.existingImages) {
+                await this.prisma.vehicleImage.update({
+                    where: { id: image.id },
+                    data: { position: Number(image.position) }
+                });
+            }
+        }
+
+        if (files && files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const position = updateVehicleDto.existingImages ? updateVehicleDto.existingImages.length + i : i;
+
+                const fileExtension = file.originalname.split('.').pop();
+                const fileName = `${updatedVehicle.id}_${position}.${fileExtension}`;
+
+                const photoUrl = await this.awsService.post(fileName, file.buffer, 'VEHICLE_PHOTOS');
+
+                await this.prisma.vehicleImage.create({
+                    data: {
+                        position,
+                        url: photoUrl,
+                        extension: fileExtension,
+                        vehicleId: updatedVehicle.id
+                    }
+                });
+            }
+        }
+
+        return updatedVehicle;
     }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.vehicleService.remove(id);
+    }
+
+    private transformDto(dto: Record<string, any>): any {
+        const result: any = {};
+
+        for (const key in dto) {
+            if (Object.prototype.hasOwnProperty.call(dto, key)) {
+                const value = dto[key];
+                const keys = key.split(/[\[\]\.]+/).filter(k => k);
+                let current = result;
+
+                for (let i = 0; i < keys.length; i++) {
+                    const k = keys[i];
+                    if (!current[k]) {
+                        current[k] = i === keys.length - 1 ? value : {};
+                    }
+                    current = current[k];
+                }
+            }
+        }
+
+        if (Array.isArray(result.existingImages)) {
+        } else if (typeof result.existingImages === 'object') {
+            result.existingImages = Object.keys(result.existingImages).map(key => result.existingImages[key]);
+        }
+
+        return result;
     }
 }

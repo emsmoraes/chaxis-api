@@ -40,8 +40,6 @@ export class VehicleService {
             const mileage = Number(createVehicleDto.mileage);
             const acceptsTrade = JSON.parse(createVehicleDto.acceptsTrade)
 
-            console.log(price)
-
             const vehicleData: Prisma.VehicleCreateInput = {
                 model: createVehicleDto.model,
                 vehicleType: { connect: { id: createVehicleDto.vehicleTypeId } },
@@ -142,20 +140,23 @@ export class VehicleService {
                 }
             }
 
+            const mileage = Number(updateVehicleDto.mileage);
+            const acceptsTrade = JSON.parse(updateVehicleDto.acceptsTrade)
+
             const updatedData: Prisma.VehicleUpdateInput = {
                 model: data.model,
                 vehicleType: data.vehicleTypeId ? { connect: { id: data.vehicleTypeId } } : undefined,
                 code: data.code,
                 version: data.version,
                 year: data.year,
-                mileage: data.mileage,
+                mileage: mileage,
                 transmission: data.transmission,
                 bodyType: data.bodyTypeId ? { connect: { id: data.bodyTypeId } } : undefined,
                 fuelType: data.fuelType,
                 licensePlateEnd: data.licensePlateEnd,
                 color: data.color,
                 price: data.price ? parseFloat(data.price) : undefined,
-                acceptsTrade: data.acceptsTrade,
+                acceptsTrade: acceptsTrade,
                 features: data.features,
                 store: data.storeId ? { connect: { id: data.storeId } } : undefined,
                 make: data.makeId ? { connect: { id: data.makeId } } : undefined,

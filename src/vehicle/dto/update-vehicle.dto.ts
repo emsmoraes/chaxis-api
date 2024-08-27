@@ -1,5 +1,15 @@
-import { IsString, IsOptional, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { IsString, IsOptional, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from 'class-transformer';
+class UpdateVehicleExistingImageDto {
+    @ApiPropertyOptional({ description: 'UUID da imagem existente' })
+    @IsUUID()
+    id: string;
+
+    @ApiPropertyOptional({ description: 'Posição da imagem' })
+    @IsInt()
+    position: string;
+}
 
 export class UpdateVehicleDto {
     @ApiProperty({ example: "Best Car Model", required: false })
@@ -28,9 +38,9 @@ export class UpdateVehicleDto {
     year?: string;
 
     @ApiProperty({ example: 15000, required: false })
-    @IsInt()
+    @IsString()
     @IsOptional()
-    mileage?: number;
+    mileage?: string;
 
     @ApiProperty({ example: "Automatic", required: false })
     @IsString()
@@ -63,9 +73,9 @@ export class UpdateVehicleDto {
     price?: string;
 
     @ApiProperty({ example: true, required: false })
-    @IsBoolean()
+    @IsString()
     @IsOptional()
-    acceptsTrade?: boolean;
+    acceptsTrade?: string;
 
     @ApiProperty({ example: ["Sunroof", "Leather Seats"], required: false })
     @IsArray()
@@ -82,4 +92,11 @@ export class UpdateVehicleDto {
     @IsUUID()
     @IsOptional()
     makeId?: string;
+
+    @ApiProperty({ example: [{ id: "image-uuid", position: 2 }], required: false })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => UpdateVehicleExistingImageDto)
+    @IsOptional()
+    existingImages?: UpdateVehicleExistingImageDto[];
 }
