@@ -70,7 +70,7 @@ model Vehicle {
     bodyTypeId      String
     makeId          String
     storeId         String
-    VehicleImage    VehicleImage[] 
+    VehicleImage    VehicleImage[]
     store           Store          @relation(fields: [storeId], references: [id])
     make            Brand          @relation(fields: [makeId], references: [id])
     bodyType        BodyType       @relation(fields: [bodyTypeId], references: [id])
