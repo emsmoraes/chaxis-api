@@ -187,7 +187,21 @@ export class VehicleService {
         }
     }
 
-    remove(id: string) {
-        return `This action removes a #${id} vehicle`;
+    async remove(id: string) {
+        try {
+            const existingVehicle = await this.prisma.vehicle.findUnique({ where: { id } });
+            if (!existingVehicle) {
+                throw new NotFoundException("Veículo não encontrado");
+            }
+
+            await this.prisma.vehicle.delete({ where: { id } });
+
+            return { message: `Veículo removido com sucesso` };
+        } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                throw new BadRequestException("Erro ao remover a veículo");
+            }
+            throw e;
+        }
     }
 }

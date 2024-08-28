@@ -5,7 +5,8 @@ import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AwsService } from 'src/aws/aws.service';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { v4 as uuidv4 } from 'uuid';
 
 @ApiTags('Vehicle')
 @Controller('vehicles')
@@ -29,12 +30,14 @@ export class VehicleController {
                 const position = i;
 
                 const fileExtension = file.originalname.split('.').pop();
-                const fileName = `${createdVehicle.id}_${position}.${fileExtension}`;
+                const uuid = uuidv4();
+                const fileName = `${uuid}.${fileExtension}`;
 
                 const photoUrl = await this.awsService.post(fileName, file.buffer, 'VEHICLE_PHOTOS');
 
                 await this.prisma.vehicleImage.create({
                     data: {
+                        id: uuid,
                         position,
                         url: photoUrl,
                         extension: fileExtension,
@@ -84,12 +87,14 @@ export class VehicleController {
                 const position = dtoPosition !== undefined ? Number(dtoPosition) : (updateVehicleDto.existingImages ? updateVehicleDto.existingImages.length + i : i);
 
                 const fileExtension = file.originalname.split('.').pop();
-                const fileName = `${updatedVehicle.id}_${position}.${fileExtension}`;
+                const uuid = uuidv4();
+                const fileName = `${uuid}.${fileExtension}`;
 
                 const photoUrl = await this.awsService.post(fileName, file.buffer, 'VEHICLE_PHOTOS');
 
                 await this.prisma.vehicleImage.create({
                     data: {
+                        id: uuid,
                         position,
                         url: photoUrl,
                         extension: fileExtension,
@@ -99,11 +104,38 @@ export class VehicleController {
             }
         }
 
+
+        if (transformedDto.imagesToDelete && Array.isArray(transformedDto.imagesToDelete)) {
+            for (const imageId of transformedDto.imagesToDelete) {
+                const image = await this.prisma.vehicleImage.findUnique({ where: { id: imageId } });
+                if (image) {
+                    const fileName = `${image.id}.${image.extension}`;
+                    await this.awsService.delete(fileName, 'VEHICLE_PHOTOS');
+
+                    await this.prisma.vehicleImage.delete({ where: { id: imageId } });
+                }
+            }
+        }
+
         return updatedVehicle;
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    async remove(@Param('id') id: string) {
+        const vehicleImages = await this.prisma.vehicleImage.findMany({
+            where: { vehicleId: id }
+        });
+
+        for (const image of vehicleImages) {
+            const fileName = `${image.id}.${image.extension}`;
+
+            await this.awsService.delete(fileName, 'VEHICLE_PHOTOS');
+
+            await this.prisma.vehicleImage.delete({
+                where: { id: image.id }
+            });
+        }
+
         return this.vehicleService.remove(id);
     }
 

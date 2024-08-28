@@ -1,6 +1,7 @@
 import { IsString, IsOptional, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal, ValidateNested } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from 'class-transformer';
+
 class UpdateVehicleExistingImageDto {
     @ApiPropertyOptional({ description: 'UUID da imagem existente' })
     @IsUUID()
@@ -99,4 +100,10 @@ export class UpdateVehicleDto {
     @Type(() => UpdateVehicleExistingImageDto)
     @IsOptional()
     existingImages?: UpdateVehicleExistingImageDto[];
+
+    @ApiPropertyOptional({ example: ["image-uuid1", "image-uuid2"], description: 'Array de IDs de imagens para deletar' })
+    @IsArray()
+    @IsUUID('4', { each: true })
+    @IsOptional()
+    imagesToDelete?: string[];
 }
