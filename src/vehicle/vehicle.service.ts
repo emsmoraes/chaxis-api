@@ -80,13 +80,68 @@ export class VehicleService {
         }
     }
 
-    async findAll() {
-        try {
-            const vehicles = await this.prisma.vehicle.findMany();
-            return vehicles;
-        } catch (error) {
-            throw new BadRequestException('Erro ao buscar veículos');
-        }
+    async findAll({
+        page = 1,
+        limit = 10,
+        makeId,
+        yearMin,
+        yearMax,
+        priceMin,
+        priceMax,
+        mileageMin,
+        mileageMax,
+        transmission,
+    }: {
+        page?: number;
+        limit?: number;
+        makeId?: string;
+        yearMin?: number;
+        yearMax?: number;
+        priceMin?: number;
+        priceMax?: number;
+        mileageMin?: number;
+        mileageMax?: number;
+        transmission?: string;
+    }) {
+        page = Number(page);
+        limit = Number(limit);
+        mileageMin = Number(mileageMin);
+        mileageMax = Number(mileageMax);
+
+        const offset = (page - 1) * limit;
+
+        const where: Prisma.VehicleWhereInput = {
+            AND: [
+                makeId ? { makeId } : undefined,
+                yearMin ? { year: { gte: String(yearMin) } } : undefined,
+                yearMax ? { year: { lte: String(yearMax) } } : undefined,
+                priceMin ? { price: { gte: priceMin } } : undefined,
+                priceMax ? { price: { lte: priceMax } } : undefined,
+                mileageMin ? { mileage: { gte: mileageMin } } : undefined,
+                mileageMax ? { mileage: { lte: mileageMax } } : undefined,
+                transmission ? { transmission } : undefined,
+            ].filter(Boolean),
+        };
+
+        const [vehicles, totalItems] = await Promise.all([
+            this.prisma.vehicle.findMany({
+                skip: offset,
+                take: limit,
+                where,
+                include: { VehicleImage: true },
+            }),
+            this.prisma.vehicle.count({ where }),
+        ]);
+
+        const totalPages = Math.ceil(totalItems / limit);
+
+        return {
+            vehicles,
+            currentPage: page,
+            totalItems,
+            totalPages,
+            itemsPerPage: limit,
+        };
     }
 
     async findOne(id: string) {

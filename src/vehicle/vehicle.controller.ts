@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Query } from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
@@ -51,8 +51,30 @@ export class VehicleController {
     }
 
     @Get()
-    findAll() {
-        return this.vehicleService.findAll();
+    async findAll(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10,
+        @Query('makeId') makeId?: string,
+        @Query('yearMin') yearMin?: number,
+        @Query('yearMax') yearMax?: number,
+        @Query('priceMin') priceMin?: number,
+        @Query('priceMax') priceMax?: number,
+        @Query('mileageMin') mileageMin?: number,
+        @Query('mileageMax') mileageMax?: number,
+        @Query('transmission') transmission?: string
+    ) {
+        return this.vehicleService.findAll({
+            page,
+            limit,
+            makeId,
+            yearMin,
+            yearMax,
+            priceMin,
+            priceMax,
+            mileageMin,
+            mileageMax,
+            transmission,
+        });
     }
 
     @Get(':id')
