@@ -61,7 +61,9 @@ export class VehicleController {
         @Query('priceMax') priceMax?: number,
         @Query('mileageMin') mileageMin?: number,
         @Query('mileageMax') mileageMax?: number,
-        @Query('transmission') transmission?: string
+        @Query('transmission') transmission?: string,
+        @Query('state') state?: string,
+        @Query('city') city?: string
     ) {
         return this.vehicleService.findAll({
             page,
@@ -74,6 +76,8 @@ export class VehicleController {
             mileageMin,
             mileageMax,
             transmission,
+            state,
+            city,
         });
     }
 

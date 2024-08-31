@@ -91,6 +91,8 @@ export class VehicleService {
         mileageMin,
         mileageMax,
         transmission,
+        state,
+        city,
     }: {
         page?: number;
         limit?: number;
@@ -102,6 +104,8 @@ export class VehicleService {
         mileageMin?: number;
         mileageMax?: number;
         transmission?: string;
+        state?: string;
+        city?: string;
     }) {
         page = Number(page);
         limit = Number(limit);
@@ -120,6 +124,8 @@ export class VehicleService {
                 mileageMin ? { mileage: { gte: mileageMin } } : undefined,
                 mileageMax ? { mileage: { lte: mileageMax } } : undefined,
                 transmission ? { transmission } : undefined,
+                state ? { store: { state } } : undefined,
+                city ? { store: { city } } : undefined,
             ].filter(Boolean),
         };
 
@@ -128,7 +134,7 @@ export class VehicleService {
                 skip: offset,
                 take: limit,
                 where,
-                include: { VehicleImage: true },
+                include: { VehicleImage: true, store: true },
             }),
             this.prisma.vehicle.count({ where }),
         ]);
@@ -143,6 +149,7 @@ export class VehicleService {
             itemsPerPage: limit,
         };
     }
+
 
     async findOne(id: string) {
         const vehicle = await this.prisma.vehicle.findFirst({ where: { id }, include: { VehicleImage: true } })
