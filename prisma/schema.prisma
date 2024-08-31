@@ -55,7 +55,7 @@ model Store {
 model Vehicle {
     id              String         @id @default(uuid())
     model           String
-    code            String
+    code            String?
     version         String
     year            String
     mileage         Int

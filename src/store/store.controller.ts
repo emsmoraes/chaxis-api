@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Query } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -23,8 +23,12 @@ export class StoreController {
     }
 
     @Get()
-    findAll() {
-        return this.storeService.findAll();
+    findAll(
+        @Query('name') name?: string,
+        @Query('state') state?: string,
+        @Query('city') city?: string,
+    ) {
+        return this.storeService.findAll({ name, state, city });
     }
 
     @Get(':id')

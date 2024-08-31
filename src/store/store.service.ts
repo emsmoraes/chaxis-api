@@ -57,8 +57,16 @@ export class StoreService {
         }
     }
 
-    findAll() {
-        return this.prisma.store.findMany();
+    findAll(filters: { name?: string; state?: string; city?: string }) {
+        const { name, state, city } = filters;
+
+        return this.prisma.store.findMany({
+            where: {
+                name: name ? { contains: name, mode: 'insensitive' } : undefined,
+                state: state ? { equals: state, mode: 'insensitive' } : undefined,
+                city: city ? { contains: city, mode: 'insensitive' } : undefined,
+            },
+        });
     }
 
     async findOne(id: string) {
