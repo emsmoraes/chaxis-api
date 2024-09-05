@@ -8,6 +8,7 @@ import { PrismaModule } from './shared/database/prisma.module';
 import { StoreModule } from './store/store.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { AwsModule } from './aws/aws.module';
+import { BrandModule } from './brand/brand.module';
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { AwsModule } from './aws/aws.module';
         PrismaModule,
         VehicleModule,
         AwsModule,
-        ConfigModule.forRoot({ isGlobal: true })
+        ConfigModule.forRoot({ isGlobal: true }),
+        BrandModule
     ],
     controllers: [],
     providers: [],
