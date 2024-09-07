@@ -75,7 +75,8 @@ async function main() {
                     model: `Model ${i + 1}`,
                     typeId: vehicleTypeIds[i % vehicleTypeIds.length],
                     code: `CODE${i + 1}`,
-                    version: "2024",
+                    searchTerm: `Model ${i + 1} Elegance`,
+                    version: "Elegance",
                     year: "2024",
                     mileage: 15000,
                     transmission: "Automatic",
@@ -89,7 +90,7 @@ async function main() {
                         set: ["Sunroof", "Leather Seats"]
                     },
                     storeId: store.id,
-                    makeId: brandIds[i % brandIds.length], 
+                    makeId: brandIds[i % brandIds.length],
                 }
             });
         } catch (error) {

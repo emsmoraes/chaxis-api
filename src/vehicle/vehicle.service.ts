@@ -39,6 +39,7 @@ export class VehicleService {
             const price = parseFloat(createVehicleDto.price);
             const mileage = Number(createVehicleDto.mileage);
             const acceptsTrade = JSON.parse(createVehicleDto.acceptsTrade)
+            const searchTerm = `${createVehicleDto.model} ${createVehicleDto.version}`
 
             const vehicleData: Prisma.VehicleCreateInput = {
                 model: createVehicleDto.model,
@@ -47,6 +48,7 @@ export class VehicleService {
                 version: createVehicleDto.version,
                 year: createVehicleDto.year,
                 mileage: mileage,
+                searchTerm: searchTerm,
                 transmission: createVehicleDto.transmission,
                 bodyType: { connect: { id: createVehicleDto.bodyTypeId } },
                 fuelType: createVehicleDto.fuelType,
@@ -93,6 +95,7 @@ export class VehicleService {
         transmission,
         state,
         city,
+        searchTerm
     }: {
         page?: number;
         limit?: number;
@@ -106,6 +109,7 @@ export class VehicleService {
         transmission?: string;
         state?: string;
         city?: string;
+        searchTerm?: string;
     }) {
         page = Number(page);
         limit = Number(limit);
@@ -113,6 +117,8 @@ export class VehicleService {
         mileageMax = Number(mileageMax);
 
         const offset = (page - 1) * limit;
+
+        console.log(searchTerm)
 
         const where: Prisma.VehicleWhereInput = {
             AND: [
@@ -126,6 +132,7 @@ export class VehicleService {
                 transmission ? { transmission } : undefined,
                 state ? { store: { state } } : undefined,
                 city ? { store: { city } } : undefined,
+                searchTerm ? { searchTerm: { contains: searchTerm, mode: Prisma.QueryMode.insensitive } } : undefined,
             ].filter(Boolean),
         };
 
@@ -204,9 +211,11 @@ export class VehicleService {
 
             const mileage = Number(updateVehicleDto.mileage);
             const acceptsTrade = JSON.parse(updateVehicleDto.acceptsTrade)
+            const searchTerm = `${updateVehicleDto.model ?? vehicle.model} ${updateVehicleDto.version ?? vehicle.version}`
 
             const updatedData: Prisma.VehicleUpdateInput = {
                 model: data.model,
+                searchTerm: searchTerm,
                 vehicleType: data.vehicleTypeId ? { connect: { id: data.vehicleTypeId } } : undefined,
                 code: data.code,
                 version: data.version,

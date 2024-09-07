@@ -63,7 +63,8 @@ export class VehicleController {
         @Query('mileageMax') mileageMax?: number,
         @Query('transmission') transmission?: string,
         @Query('state') state?: string,
-        @Query('city') city?: string
+        @Query('city') city?: string,
+        @Query('searchTerm') searchTerm?: string
     ) {
         return this.vehicleService.findAll({
             page,
@@ -78,6 +79,7 @@ export class VehicleController {
             transmission,
             state,
             city,
+            searchTerm
         });
     }
 

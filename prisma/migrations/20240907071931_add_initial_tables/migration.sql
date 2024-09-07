@@ -50,7 +50,8 @@ CREATE TABLE "stores" (
 CREATE TABLE "vehicles" (
     "id" TEXT NOT NULL,
     "model" TEXT NOT NULL,
-    "code" TEXT NOT NULL,
+    "code" TEXT,
+    "searchTerm" TEXT NOT NULL,
     "version" TEXT NOT NULL,
     "year" TEXT NOT NULL,
     "mileage" INTEGER NOT NULL,
