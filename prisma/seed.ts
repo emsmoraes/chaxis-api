@@ -10,7 +10,6 @@ async function main() {
     const bodyTypeIds = [];
     const brandIds = [];
 
-    // Seeds para Brands
     for (const brand of Brands) {
         const createdBrand = await prisma.brand.upsert({
             where: { code: brand.codigo },
@@ -64,6 +63,8 @@ async function main() {
             state: "NY",
             postalCode: "10001",
             country: "USA",
+            latitude: 40.7128,
+            longitude: -74.0060,
             dealershipId: dealership.id,
         }
     });

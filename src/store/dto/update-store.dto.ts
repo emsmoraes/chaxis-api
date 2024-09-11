@@ -38,6 +38,16 @@ export class UpdateStoreDto extends PartialType(CreateStoreDto) {
     @IsOptional()
     country?: string;
 
+    @ApiProperty({ example: "40.7128" })
+    @IsString()
+    @IsOptional()
+    latitude?: string;
+
+    @ApiProperty({ example: "-74.0060" })
+    @IsString()
+    @IsOptional()
+    longitude?: string;
+
     @ApiProperty({ example: "dealership-uuid" })
     @IsUUID()
     @IsOptional()

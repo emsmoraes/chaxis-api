@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUUID, IsDateString } from "class-validator";
+import { IsString, IsOptional, IsUUID, IsDateString, IsNumber } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateStoreDto {
@@ -30,6 +30,14 @@ export class CreateStoreDto {
     @ApiProperty({ example: "USA" })
     @IsString()
     country: string;
+
+    @ApiProperty({ example: "40.7128" })
+    @IsString()
+    latitude: string;
+
+    @ApiProperty({ example: "-74.0060" })
+    @IsString()
+    longitude: string;
 
     @ApiProperty({ example: "dealership-uuid" })
     @IsUUID()

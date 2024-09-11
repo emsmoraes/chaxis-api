@@ -39,6 +39,8 @@ CREATE TABLE "stores" (
     "state" TEXT NOT NULL,
     "postalCode" TEXT NOT NULL,
     "country" TEXT NOT NULL,
+    "latitude" DECIMAL(9,6) NOT NULL,
+    "longitude" DECIMAL(9,6) NOT NULL,
     "dealership_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
