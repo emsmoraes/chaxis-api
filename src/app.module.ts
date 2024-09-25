@@ -9,6 +9,7 @@ import { StoreModule } from './store/store.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { AwsModule } from './aws/aws.module';
 import { BrandModule } from './brand/brand.module';
+import { BodyTypeModule } from './body-type/body-type.module';
 
 @Module({
     imports: [
@@ -23,7 +24,8 @@ import { BrandModule } from './brand/brand.module';
         VehicleModule,
         AwsModule,
         ConfigModule.forRoot({ isGlobal: true }),
-        BrandModule
+        BrandModule,
+        BodyTypeModule
     ],
     controllers: [],
     providers: [],

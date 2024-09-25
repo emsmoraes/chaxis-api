@@ -118,8 +118,6 @@ export class VehicleService {
 
         const offset = (page - 1) * limit;
 
-        console.log(searchTerm)
-
         const where: Prisma.VehicleWhereInput = {
             AND: [
                 makeId ? { makeId } : undefined,
@@ -141,7 +139,7 @@ export class VehicleService {
                 skip: offset,
                 take: limit,
                 where,
-                include: { VehicleImage: true, store: true },
+                include: { VehicleImage: true, store: true, make: true },
             }),
             this.prisma.vehicle.count({ where }),
         ]);
