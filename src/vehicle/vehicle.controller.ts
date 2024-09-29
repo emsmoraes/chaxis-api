@@ -51,37 +51,37 @@ export class VehicleController {
     }
 
     @Get()
-    async findAll(
-        @Query('page') page: number = 1,
-        @Query('limit') limit: number = 10,
-        @Query('makeId') makeId?: string,
-        @Query('yearMin') yearMin?: number,
-        @Query('yearMax') yearMax?: number,
-        @Query('priceMin') priceMin?: number,
-        @Query('priceMax') priceMax?: number,
-        @Query('mileageMin') mileageMin?: number,
-        @Query('mileageMax') mileageMax?: number,
-        @Query('transmission') transmission?: string,
-        @Query('state') state?: string,
-        @Query('city') city?: string,
-        @Query('searchTerm') searchTerm?: string
-    ) {
-        return this.vehicleService.findAll({
-            page,
-            limit,
-            makeId,
-            yearMin,
-            yearMax,
-            priceMin,
-            priceMax,
-            mileageMin,
-            mileageMax,
-            transmission,
-            state,
-            city,
-            searchTerm
-        });
-    }
+async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('brand') brand?: string,
+    @Query('yearMin') yearMin?: number,
+    @Query('yearMax') yearMax?: number,
+    @Query('priceMin') priceMin?: number,
+    @Query('priceMax') priceMax?: number,
+    @Query('mileageMin') mileageMin?: number,
+    @Query('mileageMax') mileageMax?: number,
+    @Query('transmission') transmission?: string,
+    @Query('state') state?: string,
+    @Query('city') city?: string,
+    @Query('searchTerm') searchTerm?: string
+) {
+    return this.vehicleService.findAll({
+        page,
+        limit,
+        brand,
+        yearMin,
+        yearMax,
+        priceMin,
+        priceMax,
+        mileageMin,
+        mileageMax,
+        transmission,
+        state,
+        city,
+        searchTerm
+    });
+}
 
     @Get(':id')
     findOne(@Param('id') id: string) {

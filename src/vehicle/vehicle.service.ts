@@ -85,7 +85,7 @@ export class VehicleService {
     async findAll({
         page = 1,
         limit = 10,
-        makeId,
+        brand,
         yearMin,
         yearMax,
         priceMin,
@@ -99,7 +99,7 @@ export class VehicleService {
     }: {
         page?: number;
         limit?: number;
-        makeId?: string;
+        brand?: string;
         yearMin?: number;
         yearMax?: number;
         priceMin?: number;
@@ -120,7 +120,7 @@ export class VehicleService {
 
         const where: Prisma.VehicleWhereInput = {
             AND: [
-                makeId ? { makeId } : undefined,
+                brand ? { make: { name: { contains: brand, mode: Prisma.QueryMode.insensitive } } } : undefined,
                 yearMin ? { year: { gte: String(yearMin) } } : undefined,
                 yearMax ? { year: { lte: String(yearMax) } } : undefined,
                 priceMin ? { price: { gte: priceMin } } : undefined,
@@ -156,8 +156,13 @@ export class VehicleService {
     }
 
 
+
     async findOne(id: string) {
-        const vehicle = await this.prisma.vehicle.findFirst({ where: { id }, include: { VehicleImage: true } })
+        const vehicle = await this.prisma.vehicle.findFirst({ where: { id }, include: { VehicleImage: true, make: true, store: {
+            include: {
+                file: true
+            }
+        }, bodyType: true, vehicleType: true } })
         if (!vehicle) {
             throw new NotFoundException("Veículo não encontrado")
         }
