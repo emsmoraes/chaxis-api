@@ -59,6 +59,7 @@ async function main() {
             name: "Best Store in Town",
             description: "Leading store with the best offers in town.",
             address: "123 Main St",
+            phone: "31982623783",
             city: "Metropolis",
             state: "NY",
             postalCode: "10001",

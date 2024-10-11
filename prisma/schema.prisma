@@ -41,6 +41,7 @@ model Store {
     state        String
     postalCode   String
     country      String
+    phone        String
     latitude     Decimal    @db.Decimal(9, 6)
     longitude    Decimal    @db.Decimal(9, 6)
     dealershipId String     @map("dealership_id")

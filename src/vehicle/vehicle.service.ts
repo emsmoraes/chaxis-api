@@ -155,8 +155,6 @@ export class VehicleService {
         };
     }
 
-
-
     async findOne(id: string) {
         const vehicle = await this.prisma.vehicle.findFirst({ where: { id }, include: { VehicleImage: true, make: true, store: {
             include: {

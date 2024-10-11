@@ -16,6 +16,11 @@ export class UpdateStoreDto extends PartialType(CreateStoreDto) {
     @ApiProperty({ example: "123 Main St" })
     @IsString()
     @IsOptional()
+    phone?: string;
+
+    @ApiProperty({ example: "123 Main St" })
+    @IsString()
+    @IsOptional()
     address?: string;
 
     @ApiProperty({ example: "Metropolis" })

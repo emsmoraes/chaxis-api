@@ -15,6 +15,10 @@ export class CreateStoreDto {
     @IsString()
     address: string;
 
+    @ApiProperty({ example: "31982623783" })
+    @IsString()
+    phone: string;
+
     @ApiProperty({ example: "Metropolis" })
     @IsString()
     city: string;
