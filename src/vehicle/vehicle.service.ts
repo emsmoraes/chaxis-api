@@ -31,15 +31,22 @@ export class VehicleService {
             throw new NotFoundException("Tipo de carroceria não encontrado");
         }
 
+        const createVehicleDto = new CreateVehicleDto();
+
+        const brand = await this.prisma.brand.findUnique({
+            where: {
+                id: createVehicleDto.makeId
+            }
+        })
+
         try {
-            const createVehicleDto = new CreateVehicleDto();
             Object.assign(createVehicleDto, data);
             await validateOrReject(createVehicleDto);
 
             const price = parseFloat(createVehicleDto.price);
             const mileage = Number(createVehicleDto.mileage);
             const acceptsTrade = JSON.parse(createVehicleDto.acceptsTrade)
-            const searchTerm = `${createVehicleDto.model} ${createVehicleDto.version}`
+            const searchTerm = `${brand.name} ${createVehicleDto.model} ${createVehicleDto.version}`
 
             const vehicleData: Prisma.VehicleCreateInput = {
                 model: createVehicleDto.model,
@@ -179,6 +186,12 @@ export class VehicleService {
         const updateVehicleDto = new UpdateVehicleDto();
         Object.assign(updateVehicleDto, data);
 
+        const brand = await this.prisma.brand.findUnique({
+            where: {
+                id: updateVehicleDto.makeId
+            }
+        })
+
         try {
             await validateOrReject(updateVehicleDto);
 
@@ -212,7 +225,7 @@ export class VehicleService {
 
             const mileage = Number(updateVehicleDto.mileage);
             const acceptsTrade = JSON.parse(updateVehicleDto.acceptsTrade)
-            const searchTerm = `${updateVehicleDto.model ?? vehicle.model} ${updateVehicleDto.version ?? vehicle.version}`
+            const searchTerm = `${brand} ${updateVehicleDto.model ?? vehicle.model} ${updateVehicleDto.version ?? vehicle.version}`
 
             const updatedData: Prisma.VehicleUpdateInput = {
                 model: data.model,

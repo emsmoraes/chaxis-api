@@ -11,6 +11,7 @@ import { AwsModule } from './aws/aws.module';
 import { BrandModule } from './brand/brand.module';
 import { BodyTypeModule } from './body-type/body-type.module';
 import { StoreVehiclesModule } from './store-vehicles/store-vehicles.module';
+import { RelatedVehiclesModule } from './related-vehicles/related-vehicles.module';
 
 @Module({
     imports: [
@@ -28,6 +29,7 @@ import { StoreVehiclesModule } from './store-vehicles/store-vehicles.module';
         BrandModule,
         BodyTypeModule,
         StoreVehiclesModule,
+        RelatedVehiclesModule,
     ],
     controllers: [],
     providers: [],
