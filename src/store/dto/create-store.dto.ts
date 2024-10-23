@@ -35,14 +35,6 @@ export class CreateStoreDto {
     @IsString()
     country: string;
 
-    @ApiProperty({ example: "40.7128" })
-    @IsString()
-    latitude: string;
-
-    @ApiProperty({ example: "-74.0060" })
-    @IsString()
-    longitude: string;
-
     @ApiProperty({ example: "dealership-uuid" })
     @IsUUID()
     dealershipId: string;

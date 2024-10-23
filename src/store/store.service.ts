@@ -21,9 +21,6 @@ export class StoreService {
 
             await validateOrReject(createStoreDto);
 
-            const latitude = parseFloat(data.latitude)
-            const longitude = parseFloat(data.longitude)
-
             const storeData: Prisma.StoreCreateInput = {
                 name: createStoreDto.name,
                 description: createStoreDto.description,
@@ -33,8 +30,6 @@ export class StoreService {
                 state: createStoreDto.state,
                 postalCode: createStoreDto.postalCode,
                 country: createStoreDto.country,
-                latitude: latitude,
-                longitude: longitude,
                 dealership: {
                     connect: { id: createStoreDto.dealershipId },
                 },
@@ -101,9 +96,6 @@ export class StoreService {
             Object.assign(updateStoreDto, data);
             await validateOrReject(updateStoreDto);
 
-            const latitude = data.latitude ? parseFloat(data.latitude).toFixed(6) : undefined;
-            const longitude = data.longitude ? parseFloat(data.longitude).toFixed(6) : undefined;
-
             const updatedStore = await this.prisma.store.update({
                 where: { id },
                 data: {
@@ -115,8 +107,6 @@ export class StoreService {
                     postalCode: data.postalCode,
                     country: data.country,
                     phone: data.phone,
-                    latitude,
-                    longitude,
                 },
                 include: {
                     file: true

@@ -64,7 +64,6 @@ async function main() {
     //         state: "NY",
     //         postalCode: "10001",
     //         country: "USA",
-    //         latitude: 40.7128,
     //         longitude: -74.0060,
     //         dealershipId: dealership.id,
     //     }
