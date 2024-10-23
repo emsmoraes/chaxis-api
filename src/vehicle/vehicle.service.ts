@@ -11,7 +11,8 @@ export class VehicleService {
     constructor(private readonly prisma: PrismaService) { }
 
     async create(data: CreateVehicleDto) {
-        const store = await this.prisma.store.findUnique({ where: { id: data.storeId } });
+
+        const store = await this.prisma.store.findUnique({ where: { id: data.storeId.trim() } });
         if (!store) {
             throw new NotFoundException("Loja não encontrada");
         }
@@ -35,7 +36,7 @@ export class VehicleService {
 
         const brand = await this.prisma.brand.findUnique({
             where: {
-                id: createVehicleDto.makeId
+                id: data.makeId
             }
         })
 
