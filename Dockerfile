@@ -29,7 +29,7 @@ COPY package*.json ./
 COPY package-lock.json ./
 
 # Install dependencies
-RUN npm run install
+RUN npm install
 
 # Copy the rest of your application code to the container
 COPY . .
