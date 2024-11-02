@@ -28,7 +28,6 @@ jobs:
           cd /chaxis-api
           git pull origin master
           npm install
-          npx prisma migrate deploy
           npm run prebuild
           npm run build
           EOF
