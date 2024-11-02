@@ -24,9 +24,13 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ec2-18-228-31-193.sa-east-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 
+      - name: Teste de conexão SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -v ubuntu@ec2-18-228-31-193.sa-east-1.compute.amazonaws.com "echo 'Conexão SSH bem-sucedida'"
+
       - name: Deploy to EC2
         run: |
-          ssh ubuntu@ec2-18-228-31-193.sa-east-1.compute.amazonaws.com << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@ec2-18-228-31-193.sa-east-1.compute.amazonaws.com << 'EOF'
           cd /home/ubuntu/chaxis-api
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
