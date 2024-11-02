@@ -25,7 +25,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh ubuntu@ec2-18-228-31-193.sa-east-1.compute.amazonaws.com << 'EOF'
-          cd /chaxis-api
+          cd /home/ubuntu/chaxis-api
           git pull origin master
           npm install
           npx prisma migrate deploy
