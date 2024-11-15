@@ -72,18 +72,27 @@ export class StoreService {
 
     async findOne(id: string) {
         const store = await this.prisma.store.findUnique({
-            where: { id },
-            include: {
-                file: true
-            }
+          where: { id },
+          include: {
+            file: true,
+          },
         });
 
         if (!store) {
-            throw new NotFoundException("Loja não encontrada");
+          throw new NotFoundException("Loja não encontrada");
         }
 
-        return store;
-    }
+        const vehicleCount = await this.prisma.vehicle.count({
+          where: {
+            storeId: id,
+          },
+        });
+
+        return {
+          ...store,
+          vehicleCount,
+        };
+      }
 
     async update(id: string, data: UpdateStoreDto) {
         try {

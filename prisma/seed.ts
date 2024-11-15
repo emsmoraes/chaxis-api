@@ -64,7 +64,6 @@ async function main() {
     //         state: "NY",
     //         postalCode: "10001",
     //         country: "USA",
-    //         longitude: -74.0060,
     //         dealershipId: dealership.id,
     //     }
     // });
