@@ -164,16 +164,42 @@ export class VehicleService {
     }
 
     async findOne(id: string) {
-        const vehicle = await this.prisma.vehicle.findFirst({ where: { id }, include: { VehicleImage: true, make: true, store: {
+        const vehicle = await this.prisma.vehicle.findFirst({
+            where: { id },
             include: {
-                file: true
-            }
-        }, bodyType: true, vehicleType: true } })
+                VehicleImage: true,
+                make: true,
+                store: {
+                    include: {
+                        file: true,
+                    },
+                },
+                bodyType: true,
+                vehicleType: true,
+            },
+        });
+
         if (!vehicle) {
-            throw new NotFoundException("Veículo não encontrado")
+            throw new NotFoundException("Veículo não encontrado");
         }
-        return vehicle;
+
+        const publishedVehicleCount = await this.prisma.vehicle.count({
+            where: {
+                storeId: vehicle.storeId,
+            },
+        });
+
+        const storeWithCount = {
+            ...vehicle.store,
+            publishedVehicleCount,
+        };
+
+        return {
+            ...vehicle,
+            store: storeWithCount,
+        };
     }
+
 
     async update(id: string, data: UpdateVehicleDto) {
         const vehicle = await this.prisma.vehicle.findUnique({
