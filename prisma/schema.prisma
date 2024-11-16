@@ -80,6 +80,11 @@ model Vehicle {
     createdAt       DateTime       @default(now()) @map("created_at")
     updatedAt       DateTime       @updatedAt @map("updated_at")
 
+    doors        Int?
+    hasGnvKit    Boolean? @map("has_gnv_kit")
+    enginePower  String?  @map("engine_power")
+    steeringType String?
+
     @@index([storeId])
     @@map("vehicles")
 }

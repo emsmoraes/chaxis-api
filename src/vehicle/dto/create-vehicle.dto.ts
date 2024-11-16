@@ -1,5 +1,5 @@
-import { IsString, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { IsString, IsUUID, IsInt, IsArray, IsBoolean, IsDecimal, IsOptional } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class CreateVehicleDto {
     @ApiProperty({ example: "Best Car Model" })
@@ -66,4 +66,24 @@ export class CreateVehicleDto {
     @ApiProperty({ example: "brand-uuid" })
     @IsUUID()
     makeId: string;
+
+    @ApiPropertyOptional({ example: 4 })
+    @IsOptional()
+    @IsString()
+    doors?: string;
+
+    @ApiPropertyOptional({ example: false })
+    @IsOptional()
+    @IsString()
+    hasGnvKit?: string;
+
+    @ApiPropertyOptional({ example: "150 HP" })
+    @IsOptional()
+    @IsString()
+    enginePower?: string;
+
+    @ApiPropertyOptional({ example: "Hydraulic" })
+    @IsOptional()
+    @IsString()
+    steeringType?: string;
 }

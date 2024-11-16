@@ -67,6 +67,10 @@ export class VehicleService {
                 features: createVehicleDto.features,
                 store: { connect: { id: createVehicleDto.storeId } },
                 make: { connect: { id: createVehicleDto.makeId } },
+                doors: JSON.parse(createVehicleDto.doors),
+                enginePower: createVehicleDto.enginePower,
+                hasGnvKit: JSON.parse(createVehicleDto.hasGnvKit),
+                steeringType: createVehicleDto.steeringType,
             };
 
             return this.prisma.vehicle.create({ data: vehicleData });
@@ -272,6 +276,10 @@ export class VehicleService {
                 features: data.features,
                 store: data.storeId ? { connect: { id: data.storeId } } : undefined,
                 make: data.makeId ? { connect: { id: data.makeId } } : undefined,
+                doors: JSON.parse(data.doors),
+                enginePower: data.enginePower,
+                hasGnvKit: JSON.parse(data.hasGnvKit),
+                steeringType: data.steeringType,
             };
 
             return await this.prisma.vehicle.update({

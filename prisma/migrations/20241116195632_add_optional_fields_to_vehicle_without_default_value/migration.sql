@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "vehicles" ALTER COLUMN "doors" DROP DEFAULT,
+ALTER COLUMN "engine_power" DROP DEFAULT,
+ALTER COLUMN "has_gnv_kit" DROP DEFAULT;

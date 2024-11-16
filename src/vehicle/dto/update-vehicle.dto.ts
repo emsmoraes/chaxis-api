@@ -106,4 +106,24 @@ export class UpdateVehicleDto {
     @IsUUID('4', { each: true })
     @IsOptional()
     imagesToDelete?: string[];
+
+    @ApiPropertyOptional({ example: 4 })
+    @IsOptional()
+    @IsString()
+    doors?: string;
+
+    @ApiPropertyOptional({ example: false })
+    @IsOptional()
+    @IsString()
+    hasGnvKit?: string;
+
+    @ApiPropertyOptional({ example: "150 HP" })
+    @IsOptional()
+    @IsString()
+    enginePower?: string;
+
+    @ApiPropertyOptional({ example: "Hydraulic" })
+    @IsOptional()
+    @IsString()
+    steeringType?: string;
 }
