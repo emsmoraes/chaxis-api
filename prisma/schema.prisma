@@ -94,6 +94,7 @@ model Brand {
     name    String    @unique
     code    String?   @unique
     alias   String    @unique
+    visible Boolean   @default(true)
     Vehicle Vehicle[]
 
     @@map("brands")

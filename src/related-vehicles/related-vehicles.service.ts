@@ -68,7 +68,4 @@ export class RelatedVehiclesService {
 
         return relatedVehicles;
     }
-
-
-
 }
