@@ -69,6 +69,10 @@ CREATE TABLE "vehicles" (
     "storeId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "doors" INTEGER,
+    "has_gnv_kit" BOOLEAN,
+    "engine_power" TEXT,
+    "steeringType" TEXT,
 
     CONSTRAINT "vehicles_pkey" PRIMARY KEY ("id")
 );
@@ -79,6 +83,7 @@ CREATE TABLE "brands" (
     "name" TEXT NOT NULL,
     "code" TEXT,
     "alias" TEXT NOT NULL,
+    "visible" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "brands_pkey" PRIMARY KEY ("id")
 );

@@ -12,13 +12,13 @@ export class AwsService {
 
         await this.s3Client.send(
             new PutObjectCommand({
-                Bucket: 'chaxiss',
+                Bucket: 'chaxis',
                 Key,
                 Body: file
             })
         )
 
-        return `https://chaxiss.s3.sa-east-1.amazonaws.com/${Key}`;
+        return `https://chaxis.s3.sa-east-1.amazonaws.com/${Key}`;
     }
 
     async delete(fileName: string, folder: string) {
@@ -26,7 +26,7 @@ export class AwsService {
 
         await this.s3Client.send(
             new DeleteObjectCommand({
-                Bucket: 'chaxiss',
+                Bucket: 'chaxis',
                 Key
             })
         );
