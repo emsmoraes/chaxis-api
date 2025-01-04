@@ -12,6 +12,7 @@ import { BrandModule } from './brand/brand.module';
 import { BodyTypeModule } from './body-type/body-type.module';
 import { StoreVehiclesModule } from './store-vehicles/store-vehicles.module';
 import { RelatedVehiclesModule } from './related-vehicles/related-vehicles.module';
+import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { RelatedVehiclesModule } from './related-vehicles/related-vehicles.modul
         BodyTypeModule,
         StoreVehiclesModule,
         RelatedVehiclesModule,
+        VehicleTypeModule,
     ],
     controllers: [],
     providers: [],
