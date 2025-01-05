@@ -9,63 +9,30 @@ export class RelatedVehiclesService {
     async findOne(vehicleId: string, limit: number) {
         const currentVehicle = await this.prisma.vehicle.findUnique({
             where: { id: vehicleId },
-            include: { make: true, bodyType: true, vehicleType: true }
+            include: { bodyType: true }
         });
-
+    
         if (!currentVehicle) {
             throw new Error('Veículo não encontrado');
         }
-
-        const [brand, model, version] = currentVehicle.searchTerm.split(' ');
-
-        const relatedVehiclesByVersion = await this.prisma.vehicle.findMany({
+    
+        // Calcula o intervalo de preço (15% para mais e para menos)
+        const minPrice = currentVehicle.price as any * 0.85;
+        const maxPrice = currentVehicle.price as any * 1.15;
+    
+        // Busca veículos relacionados com base no BodyType e faixa de preço
+        const relatedVehicles = await this.prisma.vehicle.findMany({
             where: {
                 AND: [
-                    { version: { equals: version } },
+                    { bodyTypeId: currentVehicle.bodyTypeId },
+                    { price: { gte: minPrice, lte: maxPrice } },
                     { id: { not: vehicleId } }
                 ]
             },
             take: limit,
             include: { VehicleImage: true, make: true, store: true }
         });
-
-        let relatedVehiclesByModel = [];
-        if (relatedVehiclesByVersion.length < limit) {
-            relatedVehiclesByModel = await this.prisma.vehicle.findMany({
-                where: {
-                    AND: [
-                        { model: { equals: model } },
-                        { id: { not: vehicleId } },
-                        { version: { not: version } }
-                    ]
-                },
-                take: limit - relatedVehiclesByVersion.length,
-                include: { VehicleImage: true, make: true, store: true }
-            });
-        }
-
-        let relatedVehiclesByBrand = [];
-        if (relatedVehiclesByVersion.length + relatedVehiclesByModel.length < limit) {
-            relatedVehiclesByBrand = await this.prisma.vehicle.findMany({
-                where: {
-                    AND: [
-                        { make: { name: brand } },
-                        { id: { not: vehicleId } },
-                        { version: { not: version } },
-                        { model: { not: model } }
-                    ]
-                },
-                take: limit - (relatedVehiclesByVersion.length + relatedVehiclesByModel.length),
-                include: { VehicleImage: true, make: true, store: true }
-            });
-        }
-
-        const relatedVehicles = [
-            ...relatedVehiclesByVersion,
-            ...relatedVehiclesByModel,
-            ...relatedVehiclesByBrand
-        ];
-
+    
         return relatedVehicles;
     }
 }
